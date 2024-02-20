@@ -1,0 +1,141 @@
+﻿@page "/Shoppingcart"
+@inject ICartService cs
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims
+
+@if(userId is null)
+{
+    <p>Du måste vara inloggad för att handla! <a href="/Account/Login">Logga in</a> eller <a href="/Account/Register">Registrera</a></p>
+}
+else
+{
+    <section class="h-100 h-custom">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12">
+                    <div class="card-registration card-registration-2">
+                        <div class="card-body p-0">
+                            <div class="row g-0">
+                                <div class="col-lg-8">
+                                    <div class="p-5">
+                                        <div class="d-flex justify-content-between align-items-center mb-5">
+                                            <h1 class="fw-bold mb-0 text-black">Varukorg</h1>
+                                        
+                                        </div>
+                                        @if(cartItems is not null)
+                                        {
+                                        
+                                            @foreach(var item in cartItems)
+                                            {
+                                        
+                                                <hr class="my-4">
+
+                                                <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                                    <div class="col-md-2 col-lg-2 col-xl-2">
+                                                        <img src="@item.Car.ImgUrl"
+                                                             class="img-fluid rounded-3">
+                                                    </div>
+                                                    <div class="col-md-3 col-lg-3 col-xl-3">
+                                                        <h6 class="text-muted">@item.Car.Name</h6>
+                                            
+                                                    </div>
+                                                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                                         <p>Qty: @item.Quantity</p>
+                                                    </div>
+                                                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                        <h6 class="mb-0">€ @item.Car.PriceEUR</h6>
+                                                    </div>
+                                        
+                                                </div>
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>Error retreiving cart...</p>
+                                        }
+
+                                   
+                                        <div class="pt-5">
+                                            <h6 class="mb-0">
+                                                <a href="#!" class="text-body">
+                                                    <i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop
+                                                </a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 bg-grey">
+                                    <div class="p-5">
+                                        <h3 class="fw-bold mb-5 mt-2 pt-1">Uppgifter</h3>
+                                        <hr class="my-4">
+
+                                    
+                                        <form>
+                                        <div class="mb-2">
+                                                <label for="form3Examplea2" class="form-label">Namn:</label>
+                                                <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
+                                        </div>
+                                        <div class="mb-2">
+                                                <label for="form3Examplea2" class="form-label">Adress:</label>
+                                                <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
+                                        </div>
+
+                                        </form>
+                                        <hr class="my-4">
+
+                                        <div class="d-flex justify-content-between mb-5">
+                                            <h5 class="text-uppercase">Total price</h5>
+                                            <h5>@totalPrice</h5>
+                                        </div>
+
+                                        <button type="button" class="btn btn-dark btn-block btn-lg"
+                                                data-mdb-ripple-color="dark">
+                                            Slutför köp
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    public string? userId;
+    public Cart cart;
+    List<CartItem> cartItems = new();
+    public decimal totalPrice;
+
+    public string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user != null && user.Identity.IsAuthenticated)
+        {
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        }
+        if(userId is not null)
+        {
+            cart = await cs.GetCart(userId);
+            cartItems = cart.Items;
+
+            foreach(var item in cartItems)
+            {
+                totalPrice += (item.Car.PriceEUR * item.Quantity);
+            }
+        }
+
+
+    }
+}

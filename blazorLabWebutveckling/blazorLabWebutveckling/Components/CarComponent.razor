@@ -1,0 +1,43 @@
+﻿
+@rendermode InteractiveServer
+
+<div class="col">
+    <div class="card mb-5 border-0">
+        <div class="card-body">
+            <button @onclick="Sound" class="sound-button"><i class="bi bi-volume-up-fill fa-6x"></i></button>
+            <img src="@car.ImgUrl" alt="carPic" class="@carImageClass mb-4"/>
+            <h5 class="card-title">@car.Name</h5>
+            <p class="card-text">@car.DescriptionShort</p>
+            <p>@car.PriceEUR EUR</p>
+            <a href="/weather" class="btn btn-dark">Mer info</a>
+            
+            <button class="btn btn-dark" @onclick="Add">Add To Cart!</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Car car { get; set; }
+    [Parameter]
+    public EventCallback AddToCart { get; set; }
+    [Parameter]
+    public EventCallback EngineSound { get; set; }
+
+    private string carImageClass = "car-img";
+
+
+    public async Task Sound()
+    {
+        await EngineSound.InvokeAsync();
+        carImageClass += " car-shake";
+        await Task.Delay(450); 
+        carImageClass = "car-img";
+    }
+
+    public async Task Add()
+    {
+        await AddToCart.InvokeAsync();
+    }
+
+}

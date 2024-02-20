@@ -1,0 +1,56 @@
+﻿@font-face{
+    font-family: fontRubrik;
+    src: url(FONT/SnackerComic_PerosnalUseOnly.ttf);
+}
+.sound-button{
+border: none;
+background-color:transparent;
+font-size: 2rem;
+position: absolute;
+left: 1rem;
+}
+
+.bilrubrik{
+    font-family: fontRubrik;
+    font-size: 8rem;
+    color: #232323;
+}
+
+.car-img { 
+    width: 200px;
+    
+}
+
+.car-img-modal {
+    width: 200px;
+}
+
+.car-shake {
+    
+    animation:car 0.15s;
+    animation-iteration-count:3;
+}
+@keyframes car {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(5deg);
+    }
+
+    50% {
+        transform: rotate(0deg);
+    }
+
+    75% {
+        transform: rotate(-5deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+   
+
+

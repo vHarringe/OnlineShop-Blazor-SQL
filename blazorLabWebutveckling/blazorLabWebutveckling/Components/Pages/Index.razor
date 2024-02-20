@@ -1,0 +1,79 @@
+﻿@page "/"
+@using System.Security.Claims
+
+@inject ICarService cs
+@inject ICartService cartService
+@inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@rendermode InteractiveServer
+
+@if (alert)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Du måste vara inloggad för att handla! <a href="/Account/Login">Logga in</a> eller <a href="/Account/Register">Registrera</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="DismissAlert"></button>
+    </div>
+    
+}
+
+
+<h3>Våra bilar</h3>
+
+<div class="row mt-5 text-center" >
+    @foreach(var car in cars)
+    {
+        <CarComponent car="car"
+            EngineSound ="() => EngineSound(1)" 
+            AddToCart ="() => AddToCart(car)"/>
+    }
+
+</div>
+
+
+
+@code {
+    List<Car> cars = new();
+    string? userId;
+
+
+    public bool notLoggedIn = true;
+
+    public bool alert = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        cars = (await cs.GetAllCarsAsync()).ToList();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user != null && user.Identity.IsAuthenticated)
+        {
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        }
+
+    }
+    public void EngineSound(int soundControl)
+    {
+        JSRuntime.InvokeVoidAsync("playAudio", soundControl);
+    }
+    public async Task AddToCart(Car car)
+    {
+        if(userId != null)
+        {
+            await cartService.AddCartItem(car, userId, 1);
+        }
+        else
+        {
+            alert = true;
+        }
+    }
+    private void DismissAlert()
+    {
+        alert = false;
+    }
+
+}
