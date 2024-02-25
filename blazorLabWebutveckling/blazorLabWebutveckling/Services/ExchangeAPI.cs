@@ -15,9 +15,9 @@ namespace blazorLabWebutveckling.Services
             _httpClient = httpClient;
         }
 
-        public async Task<decimal> GetExchangeRate(string fromCurrency, string toCurrency)
+        public async Task<decimal> GetExchangeRate(string toCurrency)
         {
-            var apiUrl = $"https://api.api-ninjas.com/v1/exchangerate?pair={fromCurrency}_{toCurrency}";
+            var apiUrl = $"https://api.api-ninjas.com/v1/exchangerate?pair=EUR_{toCurrency}";
             string apiKey = "U/tWzm0+xhEQq+ePAlHXPw==QbjG5CtE2rEwvQ59";
 
 

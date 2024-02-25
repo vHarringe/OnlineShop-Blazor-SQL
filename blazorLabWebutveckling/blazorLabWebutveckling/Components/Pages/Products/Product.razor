@@ -31,7 +31,16 @@
                 <p class="">@car.DescriptionShort</p>
                     <button @onclick="Sound" class="sound-button"><i class="bi bi-volume-up-fill fa-6x"></i></button>
                 <p>@car.DescriptionLong</p>
-                <p>@car.PriceEUR EUR</p>
+                <p>@price @currency</p>
+                <select class="form-select" aria-label="Default select example"@onchange="CalculatePrice">
+                    <option selected value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="USD">USD</option>
+                    
+                </select>
+
+                <br />
+
                 <div class="">
                     <button class="btn btn-dark" @onclick="AddToCart">Add To Cart!</button>
 
@@ -49,18 +58,20 @@ else
     public int Id { get; set; }
 
     private string carImageClass = "car-img car-img-productpage";
-    public bool alert = false;
+    private bool alert = false;
     string? userId;
     public Car car;
 
-    private decimal exchangeRate; 
+    private string currency = "EUR";
+    private decimal exchangeRate;
+    private decimal price;
 
 
 
     protected override async Task OnInitializedAsync()
     {
         car = await cs.GetCarById(Id);
-  
+
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
@@ -69,9 +80,17 @@ else
             userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
-        exchangeRate = await exchangeApi.GetExchangeRate("EUR", "USD");
+        exchangeRate = await exchangeApi.GetExchangeRate(currency);
+        price = car.PriceEUR * exchangeRate;
 
     }
+    private async Task CalculatePrice(ChangeEventArgs e)
+    {
+        currency = e.Value.ToString();
+        exchangeRate = await exchangeApi.GetExchangeRate(currency);
+        price = Math.Round(car.PriceEUR * exchangeRate, 2);
+    }
+    
 
     public async Task Sound()
     {
