@@ -19,5 +19,13 @@ namespace blazorLabWebutveckling.Repositories
         {
             return await _data.Cars.ToListAsync();
         }
+
+        public async Task<Car> GetCarById(int id)
+        {
+            var car = await _data.Cars.FirstOrDefaultAsync(c => c.Id == id);
+            return car ?? new Car();
+            
+
+        }
     }
 }

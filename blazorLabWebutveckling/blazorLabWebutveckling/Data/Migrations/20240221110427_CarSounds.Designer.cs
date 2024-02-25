@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using blazorLabWebutveckling.Data;
 
@@ -11,9 +12,11 @@ using blazorLabWebutveckling.Data;
 namespace blazorLabWebutveckling.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240221110427_CarSounds")]
+    partial class CarSounds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,7 +265,7 @@ namespace blazorLabWebutveckling.Migrations
                         {
                             Id = 1,
                             CarSound = 1,
-                            DescriptionLong = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                            DescriptionLong = "",
                             DescriptionShort = "Mycket blå och cool bil",
                             ImgUrl = "Images/blue.png",
                             Name = "Blå bil",
@@ -273,7 +276,7 @@ namespace blazorLabWebutveckling.Migrations
                         {
                             Id = 2,
                             CarSound = 2,
-                            DescriptionLong = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                            DescriptionLong = "",
                             DescriptionShort = "Mycket grön och skön bil",
                             ImgUrl = "Images/green.png",
                             Name = "Grön bil",
@@ -284,7 +287,7 @@ namespace blazorLabWebutveckling.Migrations
                         {
                             Id = 3,
                             CarSound = 3,
-                            DescriptionLong = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                            DescriptionLong = "",
                             DescriptionShort = "Snabb gul bil",
                             ImgUrl = "Images/yellow.png",
                             Name = "Gul bil",
@@ -295,7 +298,7 @@ namespace blazorLabWebutveckling.Migrations
                         {
                             Id = 4,
                             CarSound = 4,
-                            DescriptionLong = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                            DescriptionLong = "",
                             DescriptionShort = "Jättefin rosa bil",
                             ImgUrl = "Images/pink.png",
                             Name = "Rosa bil",
@@ -306,7 +309,7 @@ namespace blazorLabWebutveckling.Migrations
                         {
                             Id = 5,
                             CarSound = 2,
-                            DescriptionLong = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                            DescriptionLong = "",
                             DescriptionShort = "Bästa röda bilen",
                             ImgUrl = "Images/red.png",
                             Name = "Röd bil",

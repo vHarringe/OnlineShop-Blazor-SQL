@@ -1,0 +1,106 @@
+﻿@page "/Product/{Id:int}"
+@using System.Security.Claims
+@using blazorLabWebutveckling.Services
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
+@inject ICarService cs
+@inject ICartService cartService
+@inject ExchangeAPI exchangeApi
+
+@rendermode InteractiveServer
+
+
+
+@if (alert)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Du måste vara inloggad för att handla! <a href="/Account/Login">Logga in</a> eller <a href="/Account/Register">Registrera</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="DismissAlert"></button>
+    </div>
+}
+@if (car is not null)
+{
+    <div class="row m-5">
+        <div class="col">
+            <img src="@car.ImgUrl" alt="carPic" class="@carImageClass mb-4" />
+        </div>
+        <div class="col">
+            <div>
+                <h1 class="card-title">@car.Name</h1>
+                <p class="">@car.DescriptionShort</p>
+                    <button @onclick="Sound" class="sound-button"><i class="bi bi-volume-up-fill fa-6x"></i></button>
+                <p>@car.DescriptionLong</p>
+                <p>@car.PriceEUR EUR</p>
+                <div class="">
+                    <button class="btn btn-dark" @onclick="AddToCart">Add To Cart!</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Product not found...</p>
+}
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private string carImageClass = "car-img car-img-productpage";
+    public bool alert = false;
+    string? userId;
+    public Car car;
+
+    private decimal exchangeRate; 
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        car = await cs.GetCarById(Id);
+  
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user != null && user.Identity.IsAuthenticated)
+        {
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        exchangeRate = await exchangeApi.GetExchangeRate("EUR", "USD");
+
+    }
+
+    public async Task Sound()
+    {
+        EngineSound();
+        carImageClass += " car-shake";
+        await Task.Delay(450);
+        carImageClass = "car-img car-img-productpage";
+    }
+
+
+    public void EngineSound()
+    {
+        JSRuntime.InvokeVoidAsync("playAudio", car.CarSound);
+    }
+    public async Task AddToCart()
+    {
+        if (userId != null)
+        {
+            await cartService.AddCartItem(car, userId, 1);
+        }
+        else
+        {
+            alert = true;
+        }
+    }
+    private void DismissAlert()
+    {
+        alert = false;
+    }
+
+}
+ 

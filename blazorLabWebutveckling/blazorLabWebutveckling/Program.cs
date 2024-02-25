@@ -10,9 +10,6 @@ using blazorLabWebutveckling.Services;
 using blazorLabWebutveckling.Repositories.RepositoryInterfaces;
 using blazorLabWebutveckling.Repositories;
 
-
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -49,6 +46,13 @@ builder.Services.AddScoped<ICarService, CarServices>();
 
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
+
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+builder.Services.AddScoped(sp => new HttpClient());
+builder.Services.AddScoped<ExchangeAPI>();
+
 
 
 

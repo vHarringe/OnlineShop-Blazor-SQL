@@ -1,0 +1,54 @@
+﻿@inject ICartService cs
+@inject IOrderService os
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@rendermode InteractiveServer
+
+
+ <a href="Account/Manage"><i class="bi bi-person h2"></i></a>
+ <a href="Shoppingcart"><i class="bi bi-cart2 h2"></i>
+    <span class="position-absolute translate-middle badge rounded-pill bg-danger cartitems">
+        @itemCount
+        <span class="visually-hidden">unread messages</span>
+    </span>
+</a>
+
+@code {
+
+    public Cart cart;
+    public string? userId;
+    public int itemCount;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user != null && user.Identity.IsAuthenticated)
+        {
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+        cs.OnCartUpdated += CartUpdated;
+        os.OnCartUpdatedOrder += CartUpdated;
+
+
+        await CartInitialized();
+
+
+    }
+
+    private async void CartUpdated()
+    {
+        itemCount = await cs.GetItemCount(userId);
+        StateHasChanged();
+    }
+    private async Task CartInitialized()
+    {
+        // detta måste lösas!
+        itemCount = await cs.GetItemCount(userId);
+        StateHasChanged();
+    }
+}

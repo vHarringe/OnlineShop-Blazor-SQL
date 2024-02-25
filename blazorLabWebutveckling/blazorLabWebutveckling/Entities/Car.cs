@@ -9,6 +9,7 @@
         public string ImgUrl { get; set; } = string.Empty;
         public decimal PriceEUR { get; set; }
         public int Qty { get; set; }
+        public int CarSound { get; set; }
 
     }
 }

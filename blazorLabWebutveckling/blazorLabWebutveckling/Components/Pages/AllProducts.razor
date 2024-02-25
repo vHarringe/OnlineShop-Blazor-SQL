@@ -3,8 +3,8 @@
 
 @inject ICarService cs
 @inject ICartService cartService
-@inject IJSRuntime JSRuntime
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
 
@@ -17,15 +17,15 @@
     
 }
 
+<h1 class="text-center bilrubrik">Turboexpressen</h1>
 
-<h3>Våra bilar</h3>
 
 <div class="row mt-5 text-center" >
     @foreach(var car in cars)
     {
         <CarComponent car="car"
-            EngineSound ="() => EngineSound(1)" 
-            AddToCart ="() => AddToCart(car)"/>
+                      ProductPage ="() => NavigateToProduct(car.Id)"
+                      AddToCart ="() => AddToCart(car)"/>
     }
 
 </div>
@@ -33,11 +33,12 @@
 
 
 @code {
+
     List<Car> cars = new();
+    List<int> sounds = new List<int> { 1, 2, 3, 4, 5 };
+    int i = 0;
     string? userId;
 
-
-    public bool notLoggedIn = true;
 
     public bool alert = false;
 
@@ -52,14 +53,14 @@
         if (user != null && user.Identity.IsAuthenticated)
         {
             userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
         }
 
     }
-    public void EngineSound(int soundControl)
+    void NavigateToProduct(int productId)
     {
-        JSRuntime.InvokeVoidAsync("playAudio", soundControl);
+        NavigationManager.NavigateTo($"/Product/{productId}");
     }
+
     public async Task AddToCart(Car car)
     {
         if(userId != null)
@@ -70,10 +71,12 @@
         {
             alert = true;
         }
+
     }
     private void DismissAlert()
     {
         alert = false;
     }
+    
 
 }

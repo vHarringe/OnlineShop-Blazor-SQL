@@ -1,7 +1,10 @@
 ﻿@page "/Shoppingcart"
 @inject ICartService cs
+@inject IOrderService os
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using System.Security.Claims
+
+@rendermode InteractiveServer
 
 @if(userId is null)
 {
@@ -22,7 +25,7 @@ else
                                             <h1 class="fw-bold mb-0 text-black">Varukorg</h1>
                                         
                                         </div>
-                                        @if(cartItems is not null)
+                                        @if(cartItems is not null && cartItems.Count() > 0)
                                         {
                                         
                                             @foreach(var item in cartItems)
@@ -52,7 +55,7 @@ else
                                         }
                                         else
                                         {
-                                            <p>Error retreiving cart...</p>
+                                            <p>No items</p>
                                         }
 
                                    
@@ -71,14 +74,18 @@ else
                                         <hr class="my-4">
 
                                     
-                                        <form>
+                                        <form id="info">
                                         <div class="mb-2">
-                                                <label for="form3Examplea2" class="form-label">Namn:</label>
-                                                <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
+                                                <label for="namn" class="form-label">Namn:</label>
+                                                <input type="text" id="namn" class="form-control form-control-lg" @bind="name"/>
                                         </div>
                                         <div class="mb-2">
-                                                <label for="form3Examplea2" class="form-label">Adress:</label>
-                                                <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
+                                                <label for="address" class="form-label">Adress:</label>
+                                                <input type="text" id="address" class="form-control form-control-lg" @bind="address" />
+                                        </div>
+                                        <div class="mb-2">
+                                                <label for="email" class="form-label">Email:</label>
+                                                <input type="text" id="email" class="form-control form-control-lg" @bind="email" />
                                         </div>
 
                                         </form>
@@ -90,7 +97,7 @@ else
                                         </div>
 
                                         <button type="button" class="btn btn-dark btn-block btn-lg"
-                                                data-mdb-ripple-color="dark">
+                                                data-mdb-ripple-color="dark" @onclick="AddOrder">
                                             Slutför köp
                                         </button>
 
@@ -111,7 +118,13 @@ else
     List<CartItem> cartItems = new();
     public decimal totalPrice;
 
+    public bool alert = false;
+
     public string message;
+
+    public string address;
+    public string name;
+    public string email;
 
     protected override async Task OnInitializedAsync()
     {
@@ -126,16 +139,29 @@ else
 
         }
         if(userId is not null)
-        {
+        {   
             cart = await cs.GetCart(userId);
-            cartItems = cart.Items;
 
-            foreach(var item in cartItems)
+            if(cart is not null && cart.Items is not null)
             {
-                totalPrice += (item.Car.PriceEUR * item.Quantity);
+                cartItems = cart.Items;
+
+                foreach(var item in cartItems)
+                {
+                    totalPrice += (item.Car.PriceEUR * item.Quantity);
+                }
             }
+            else
+            {
+                cartItems = new List<CartItem>();
+            }
+
         }
 
-
     }
+    public async void AddOrder()
+    {
+        await os.AddOrder(cart, address, name, email);
+    }
+
 }

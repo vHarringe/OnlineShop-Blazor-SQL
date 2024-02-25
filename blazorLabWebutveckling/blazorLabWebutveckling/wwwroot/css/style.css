@@ -2,12 +2,17 @@
     font-family: fontRubrik;
     src: url(FONT/SnackerComic_PerosnalUseOnly.ttf);
 }
-.sound-button{
-border: none;
-background-color:transparent;
-font-size: 2rem;
-position: absolute;
-left: 1rem;
+
+.cartitems{
+    top: 1rem;
+    
+}
+.sound-button {
+    border: none;
+    background-color: transparent;
+    font-size: 2.5rem;
+    margin: 0;
+
 }
 
 .bilrubrik{
@@ -21,8 +26,8 @@ left: 1rem;
     
 }
 
-.car-img-modal {
-    width: 200px;
+.car-img-productpage {
+    width: 400px;
 }
 
 .car-shake {

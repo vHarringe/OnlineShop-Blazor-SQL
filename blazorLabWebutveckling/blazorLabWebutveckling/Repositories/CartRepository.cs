@@ -50,6 +50,18 @@ namespace blazorLabWebutveckling.Repositories
 
         }
 
-      
+        public async Task RemoveCart(Cart cart)
+        {
+            _data.Carts.Remove(cart);
+            await _data.SaveChangesAsync();
+        }
+
+        public Task<int> GetItemCount(string userId)
+        {
+            return _data.Carts
+                   .Where(c => c.UserId == userId)
+                   .SelectMany(c => c.Items)
+                   .SumAsync(i => i.Quantity);
+        }
     }
 }

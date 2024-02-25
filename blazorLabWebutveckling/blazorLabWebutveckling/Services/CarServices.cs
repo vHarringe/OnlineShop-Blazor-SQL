@@ -20,5 +20,14 @@ namespace blazorLabWebutveckling.Services
         {
             return await _carRepository.GetAllCarsAsync();
         }
+        public async Task<Car> GetCarById(int id)
+        {
+            return await _carRepository.GetCarById(id);
+        }
+
+        public Task HonkCar(Car car)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

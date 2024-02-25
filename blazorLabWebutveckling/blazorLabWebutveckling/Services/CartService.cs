@@ -3,6 +3,7 @@ using blazorLabWebutveckling.Data;
 using blazorLabWebutveckling.Entities;
 using blazorLabWebutveckling.Repositories.RepositoryInterfaces;
 using blazorLabWebutveckling.Services.ServiceInterfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 
 
@@ -13,12 +14,15 @@ namespace blazorLabWebutveckling.Services
     {
         private readonly ICartRepository _cartRepository;
         public ApplicationDbContext _context;
+        public IServiceScopeFactory ServiceScopeFactory { get; }
 
-        public CartService(ICartRepository cartRepository, ApplicationDbContext context)
+        public CartService(ICartRepository cartRepository, ApplicationDbContext context, IServiceScopeFactory serviceScopeFactory)
         {
             _cartRepository = cartRepository;
             _context = context;
+            ServiceScopeFactory = serviceScopeFactory;
         }
+        public event Action? OnCartUpdated;
 
 
         public async Task AddCartItem(Car car, string userId, int quantity)
@@ -45,17 +49,14 @@ namespace blazorLabWebutveckling.Services
             {
                 cart.Items.Add(new CartItem { Quantity = quantity, Car = car });
             }
-            await _cartRepository.DecreaseQuantity(car, quantity);
+            
 
             await _context.SaveChangesAsync();
+            OnCartUpdated?.Invoke();
+
         }
 
         public Task<IEnumerable<CartItem>> GetCartItems()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveCartItem()
         {
             throw new NotImplementedException();
         }
@@ -64,6 +65,24 @@ namespace blazorLabWebutveckling.Services
         {
             var cart = await _cartRepository.GetCart(userId);
             return cart;
+        }
+        //public async Task<int> GetItemCount(string userId)
+        //{
+        //    return await _cartRepository.GetItemCount(userId);
+
+        //}
+        public async Task<int> GetItemCount(string userId)
+        {
+            using (var scope = ServiceScopeFactory.CreateScope())
+            {
+                var scopedCartRepository = scope.ServiceProvider.GetRequiredService<ICartRepository>();
+                return await scopedCartRepository.GetItemCount(userId);
+            }
+        }
+
+        public Task RemoveCartItem()
+        {
+            throw new NotImplementedException();
         }
     }
 }

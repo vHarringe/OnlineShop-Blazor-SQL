@@ -10,5 +10,11 @@ namespace blazorLabWebutveckling.Services.ServiceInterfaces
         public Task<IEnumerable<CartItem>> GetCartItems();
 
         public Task<Cart> GetCart(string userId);
+
+        public Task<int> GetItemCount(string userId);
+
+        public event Action OnCartUpdated;
+
+
     }
 }
