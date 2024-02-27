@@ -1,4 +1,4 @@
-﻿namespace blazorLabWebutveckling.Entities
+﻿    namespace blazorLabWebutveckling.Entities
 {
     public class Car
     {

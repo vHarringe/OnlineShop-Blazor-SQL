@@ -1,6 +1,8 @@
 ﻿using blazorLabWebutveckling.Entities;
 using blazorLabWebutveckling.Repositories.RepositoryInterfaces;
 using blazorLabWebutveckling.Services.ServiceInterfaces;
+using DTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace blazorLabWebutveckling.Services
 {
@@ -51,6 +53,36 @@ namespace blazorLabWebutveckling.Services
             OnCartUpdatedOrder?.Invoke();
 
         }
+
+        public async Task<OrderDto> GetOrder(int id)
+        {
+            var order = await OrderRepository.GetOrder(id);
+            var orderDto = new OrderDto
+                {
+                Id = order.Id,
+                Name = order.Name,
+                Address = order.Address,
+                Email = order.Email,
+                Items = order.OrderItems.Select(item => new OrderItemDto
+                {
+                    ItemId = item.OrderItemId,
+                    car = new CarDto
+                    {
+                        Id = item.Car.Id,
+                        DescriptionShort = item.Car.DescriptionShort,
+                        Name = item.Car.Name
+                    },
+                    Price = item.Car.PriceEUR,
+                    Quantity = item.Quantity
+
+                }).ToList(),
+
+            };
+
+            return orderDto;
+
+        }
+
 
     }
 }
