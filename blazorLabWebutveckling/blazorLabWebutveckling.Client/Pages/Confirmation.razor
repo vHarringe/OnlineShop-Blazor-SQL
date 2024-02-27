@@ -1,5 +1,80 @@
-﻿<h3>Confirmation</h3>
+﻿@page "/confirmation/{Id:int}"
+
+@inject IConfirmationService ConfirmationService
+@rendermode InteractiveServer
+
+@if(order != null)
+{
+    <section class="h-100 h-custom">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12">
+                    <div class="card-registration card-registration-2">
+                        <div class="card-body p-0">
+                            <div class="row g-0">
+                                <div class="col-lg-8">
+                                    <div class="p-5">
+                                        <div class="d-flex justify-content-between align-items-center mb-5">
+                                            <h1 class="fw-bold mb-0 text-black">Tack för din beställning!</h1>
+
+                                            <hr />
+                                        </div>
+                                            <h3>Produkter</h3>
+                                            @foreach (var item in order.Items)
+                                            {
+
+                                                <hr class="my-4">
+
+                                                <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                                    
+                                                    <div class="col-md-3 col-lg-3 col-xl-3">
+                                                        <h6 class="text-muted">@item.car.Name</h6>
+
+                                                    </div>
+                                                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                                        <p>@item.Quantity st</p>
+                                                    </div>
+                                                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                        <h6 class="mb-0">€ @item.Price</h6>
+                                                    </div>
+                                                </div>
+                                            }
+                                        <hr class="my-4">
+                                            <div>
+                                                <p>@order.Name</p>
+                                                <p>@order.Address</p>
+                                                <p>@order.Email</p>
+                                               
+                                            </div>
+
+                                        <div class="pt-5">
+                                            <h6 class="mb-0">
+                                                <a href="#!" class="text-body">
+                                                    <i class="fas fa-long-arrow-alt-left me-2"></i>Tillbaka till butik
+                                                </a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+} 
 
 @code {
 
+    [Parameter]
+    public int Id { get; set; }
+
+    OrderDto? order;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = await ConfirmationService.GetOrderConfirmation(Id);
+    }
 }

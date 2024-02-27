@@ -1,10 +1,12 @@
 ﻿@page "/"
 @using System.Security.Claims
+@using DTOs
 
 @inject ICarService cs
 @inject ICartService cartService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IOrderService os
 
 @rendermode InteractiveServer
 
@@ -12,6 +14,15 @@
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         Du måste vara inloggad för att handla! <a href="/Account/Login">Logga in</a> eller <a href="/Account/Register">Registrera</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="DismissAlert"></button>
+    </div>
+    
+}
+@if (alertCart && carCart != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Den valda artikeln har inte lagts till i varukorgen, då du valt fler än som finns tillgängliga i lager 
+        (just nu finns @carCart.Qty artiklar i lager).
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="DismissAlert"></button>
     </div>
     
@@ -30,8 +41,6 @@
 
 </div>
 
-
-
 @code {
 
     List<Car> cars = new();
@@ -39,8 +48,14 @@
     int i = 0;
     string? userId;
 
+    OrderDto? order;
 
     public bool alert = false;
+    public bool alertCart = false;
+
+    public int itemsInCart;
+    public int lagerSaldo;
+    public Car? carCart;
 
 
     protected override async Task OnInitializedAsync()
@@ -55,6 +70,7 @@
             userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
+        order = await os.GetOrder(1);
     }
     void NavigateToProduct(int productId)
     {
@@ -65,7 +81,16 @@
     {
         if(userId != null)
         {
-            await cartService.AddCartItem(car, userId, 1);
+            itemsInCart = await cartService.GetItemCount(userId, car.Id);
+            if (itemsInCart >= car.Qty)
+            {
+                carCart = car;
+                alertCart = true;
+            }
+            else
+            {
+                await cartService.AddCartItem(car, userId, 1);
+            }
         }
         else
         {
@@ -76,6 +101,7 @@
     private void DismissAlert()
     {
         alert = false;
+        alertCart = false;
     }
     
 

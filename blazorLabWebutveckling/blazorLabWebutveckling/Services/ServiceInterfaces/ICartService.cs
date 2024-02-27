@@ -11,7 +11,7 @@ namespace blazorLabWebutveckling.Services.ServiceInterfaces
 
         public Task<Cart> GetCart(string userId);
 
-        public Task<int> GetItemCount(string userId);
+        public Task<int> GetItemCount(string userId, int? carId = null);
 
         public event Action OnCartUpdated;
 

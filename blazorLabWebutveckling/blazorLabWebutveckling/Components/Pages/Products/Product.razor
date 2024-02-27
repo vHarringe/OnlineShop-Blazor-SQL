@@ -42,7 +42,7 @@
                 <br />
 
                 <div class="">
-                    <button class="btn btn-dark" @onclick="AddToCart">Add To Cart!</button>
+                    <button class="btn btn-dark @(car.Qty < 1 ? "disabled" : "")" @onclick="AddToCart">Add To Cart!</button>
 
                 </div>
             </div>

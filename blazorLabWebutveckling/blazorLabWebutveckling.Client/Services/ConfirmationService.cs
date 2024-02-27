@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 
 namespace blazorLabWebutveckling.Client.Services
 {
-    public class ConfirmationService
+    public class ConfirmationService : IConfirmationService
     {
         private readonly HttpClient httpClient;
 
@@ -14,8 +14,18 @@ namespace blazorLabWebutveckling.Client.Services
 
         public async Task<OrderDto> GetOrderConfirmation(int id)
         {
-            var confirmation = await this.httpClient.GetFromJsonAsync<OrderDto>("api/confirm");
-            return confirmation ?? new OrderDto();
+            try
+            {
+                
+                var confirmation = await this.httpClient.GetFromJsonAsync<OrderDto>($"api/confirm/{id}");
+                return confirmation ?? new OrderDto();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
         }
     }

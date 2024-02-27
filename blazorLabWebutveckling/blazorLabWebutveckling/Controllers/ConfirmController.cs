@@ -13,17 +13,21 @@ namespace blazorLabWebutveckling.Controllers
     {
         private readonly IOrderService orderService;
 
-        public ConfirmController(IOrderService orderService) 
+        public ConfirmController(IOrderService orderService)
         {
             this.orderService = orderService;
         }
 
-        [HttpGet]
-        public async Task<OrderDto> GetOrder(int id) 
+        
+        [HttpGet("{id:int}")] 
+        public async Task<ActionResult<OrderDto>> GetOrder(int id)
         {
             var orderDto = await orderService.GetOrder(id);
-
-            return orderDto;
+            if (orderDto == null)
+            {
+                return NotFound(); 
+            }
+            return Ok(orderDto); 
         }
     }
 }

@@ -22,7 +22,11 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order> GetOrder(int id)
     {
-        var order = await Context.Orders.FirstOrDefaultAsync(o => o.Id == id);
-        throw new NotImplementedException();
+        var order = await Context.Orders
+                         .Include(o => o.OrderItems)
+                         .ThenInclude(oi => oi.Car) 
+                         .FirstOrDefaultAsync(o => o.Id == id);
+
+        return order ?? new Order();
     }
 }

@@ -8,7 +8,7 @@ namespace blazorLabWebutveckling.Repositories.RepositoryInterfaces
         public Task RemoveCart(Cart cart);
         public Task AddCart(Cart cart);
         public Task<Cart> GetCart(string userId);
-        public Task<int> GetItemCount(string userId);
+        public Task<int> GetItemCount(string userId, int? carId = null);
 
     }
 }

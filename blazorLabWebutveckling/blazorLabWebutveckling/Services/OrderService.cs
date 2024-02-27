@@ -19,7 +19,7 @@ namespace blazorLabWebutveckling.Services
 
         public IOrderRepository OrderRepository { get; }
 
-        public async Task AddOrder(Cart cart, string adress, string name, string email)
+        public async Task<int> AddOrder(Cart cart, string adress, string name, string email)
         {
             Order order = new();
 
@@ -44,6 +44,7 @@ namespace blazorLabWebutveckling.Services
 
 
             await OrderRepository.AddOrder(order);
+
             foreach(var car in cart.Items)
             {
                 await cartRepository.DecreaseQuantity(car.Car, car.Quantity);
@@ -51,6 +52,8 @@ namespace blazorLabWebutveckling.Services
             }
             await cartRepository.RemoveCart(cart);
             OnCartUpdatedOrder?.Invoke();
+
+            return order.Id;
 
         }
 

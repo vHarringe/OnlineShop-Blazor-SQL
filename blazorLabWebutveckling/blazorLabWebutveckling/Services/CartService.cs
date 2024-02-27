@@ -71,12 +71,22 @@ namespace blazorLabWebutveckling.Services
         //    return await _cartRepository.GetItemCount(userId);
 
         //}
-        public async Task<int> GetItemCount(string userId)
+        public async Task<int> GetItemCount(string userId, int? carId = null)
         {
+
             using (var scope = ServiceScopeFactory.CreateScope())
             {
                 var scopedCartRepository = scope.ServiceProvider.GetRequiredService<ICartRepository>();
-                return await scopedCartRepository.GetItemCount(userId);
+                if (carId.HasValue)
+                {
+                    var itemCount = await scopedCartRepository.GetItemCount(userId, carId);
+                    return itemCount;
+                }
+                else
+                {
+                    return await scopedCartRepository.GetItemCount(userId); 
+
+                }
             }
         }
 

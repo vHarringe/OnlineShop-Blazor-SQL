@@ -1,16 +1,21 @@
 ﻿
 @rendermode InteractiveServer
 
-<div class="col">
+<div class="col ">
     <div class="card mb-5 border-0">
         <div class="card-body">
-            <img src="@car.ImgUrl" alt="carPic" class="@carImageClass mb-4"/>
-            <h5 class="card-title">@car.Name</h5>
-            <p class="card-text">@car.DescriptionShort</p>
-            <p>@car.PriceEUR EUR</p>
-            <a class="btn btn-dark" @onclick="Page">Mer info</a>
+            <img src="@car.ImgUrl" alt="carPic" class="@carImageClass mb-4 @(car.Qty < 1 ? "soldOutCar" : "")" />
+
+            @if(car.Qty < 1)
+            {
+                <img src="Images/soldout.png" alt="sd" class="soldOutOverlay mb-4" />
+            }
+            <h5 class="card-title @(car.Qty < 1 ? "soldOutCar" : "")">@car.Name</h5>
+            <p class="card-text @(car.Qty < 1 ? "soldOutCar" : "")">@car.DescriptionShort</p>
+            <p class="@(car.Qty < 1 ? "soldOutCar" : "")">@car.PriceEUR EUR</p>
+            <a class="btn btn-dark @(car.Qty < 1 ? "soldOutCar" : "")" @onclick="Page">Mer info</a>
             
-            <button class="btn btn-dark" @onclick="Add">Add To Cart!</button>
+            <button class="btn btn-dark @(car.Qty < 1 ? "soldOutCar" : "")" @onclick="Add">Add To Cart!</button>
         </div>
     </div>
 </div>

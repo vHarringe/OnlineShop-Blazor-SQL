@@ -56,12 +56,23 @@ namespace blazorLabWebutveckling.Repositories
             await _data.SaveChangesAsync();
         }
 
-        public Task<int> GetItemCount(string userId)
+        public Task<int> GetItemCount(string userId, int? carId = null)
         {
-            return _data.Carts
-                   .Where(c => c.UserId == userId)
-                   .SelectMany(c => c.Items)
-                   .SumAsync(i => i.Quantity);
+            if (carId.HasValue)
+            {
+                return _data.Carts
+                       .Where(c => c.UserId == userId)
+                       .SelectMany(c => c.Items)
+                       .Where(i => i.CarId == carId)
+                       .SumAsync(i => i.Quantity);
+            }
+            else
+            {
+                return _data.Carts
+                       .Where(c => c.UserId == userId)
+                       .SelectMany(c => c.Items)
+                       .SumAsync(i => i.Quantity);
+            }
         }
     }
 }

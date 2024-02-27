@@ -9,6 +9,7 @@ using blazorLabWebutveckling.Services.ServiceInterfaces;
 using blazorLabWebutveckling.Services;
 using blazorLabWebutveckling.Repositories.RepositoryInterfaces;
 using blazorLabWebutveckling.Repositories;
+using blazorLabWebutveckling.Client.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,9 +55,21 @@ builder.Services.AddScoped(sp => new HttpClient());
 builder.Services.AddScoped<ExchangeAPI>();
 
 
+builder.Services.AddScoped<IConfirmationService, ConfirmationService>();
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7143/") });
+
+builder.Services.AddControllers();
+
 
 
 var app = builder.Build();
+
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
