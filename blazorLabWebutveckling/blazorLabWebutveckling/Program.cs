@@ -56,6 +56,7 @@ builder.Services.AddScoped<ExchangeAPI>();
 
 
 builder.Services.AddScoped<IConfirmationService, ConfirmationService>();
+
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7143/") });
 
 builder.Services.AddControllers();

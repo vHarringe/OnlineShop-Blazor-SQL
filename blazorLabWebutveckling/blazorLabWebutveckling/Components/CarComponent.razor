@@ -4,7 +4,7 @@
 <div class="col ">
     <div class="card mb-5 border-0">
         <div class="card-body">
-            <img src="@car.ImgUrl" alt="carPic" class="@carImageClass mb-4 @(car.Qty < 1 ? "soldOutCar" : "")" />
+            <img src="@car.ImgUrl" alt="carPic" class="car-img mb-4 @(car.Qty < 1 ? "soldOutCar" : "")" />
 
             @if(car.Qty < 1)
             {
@@ -15,7 +15,7 @@
             <p class="@(car.Qty < 1 ? "soldOutCar" : "")">@car.PriceEUR EUR</p>
             <a class="btn btn-dark @(car.Qty < 1 ? "soldOutCar" : "")" @onclick="Page">Mer info</a>
             
-            <button class="btn btn-dark @(car.Qty < 1 ? "soldOutCar" : "")" @onclick="Add">Add To Cart!</button>
+            <button class="@buttonAnimation @(car.Qty < 1 ? "soldOutCar" : "")" @onclick="Add">Add To Cart!</button>
         </div>
     </div>
 </div>
@@ -27,17 +27,26 @@
     public EventCallback AddToCart { get; set; }
     [Parameter]
     public EventCallback ProductPage { get; set; }
-   
-    private string carImageClass = "car-img";
+
+    private string buttonAnimation = "btn btn-dark";
 
 
     public async Task Add()
     {
         await AddToCart.InvokeAsync();
-    } 
+        buttonAnimation = "btn btn-dark button-animation";
+        StateHasChanged();
+
+        await Task.Delay(100); 
+
+        buttonAnimation = "btn btn-dark";
+        StateHasChanged(); 
+    }
+
     public async Task Page()
     {
         await ProductPage.InvokeAsync();
     }
+
 
 }

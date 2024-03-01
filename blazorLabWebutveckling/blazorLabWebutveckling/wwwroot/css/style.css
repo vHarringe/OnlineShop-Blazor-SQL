@@ -50,6 +50,24 @@
     animation:car 0.15s;
     animation-iteration-count:3;
 }
+
+.button-animation {
+    animation: add 0.10s;
+    animation-iteration-count: 1;
+}
+
+@keyframes add {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        
+        transform: scale(1.1);
+    } 
+    100% {
+        transform: scale(1);
+    }
+}
 @keyframes car {
     0% {
         transform: rotate(0deg);
